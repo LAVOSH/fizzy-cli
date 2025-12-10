@@ -41,6 +41,26 @@ module Fizzy
       "/#{@account}#{path}"
     end
 
+    def get_all(path, params = {})
+      all_data = []
+      current_params = params.dup
+
+      loop do
+        result = get(path, current_params)
+        data = result[:data]
+        all_data.concat(Array(data))
+
+        pagination = result[:pagination]
+        break unless pagination && pagination[:has_next] && pagination[:next_url]
+
+        next_uri = URI.parse(pagination[:next_url])
+        next_params = URI.decode_www_form(next_uri.query || "").to_h
+        current_params = next_params.transform_keys(&:to_sym)
+      end
+
+      { data: all_data, pagination: nil }
+    end
+
     private
 
     def build_uri(path, params = {})
