@@ -44,6 +44,8 @@ module Fizzy
       def output(result)
         response = if result.is_a?(Response)
           result
+        elsif result.nil?
+          Response.success(data: nil)
         else
           Response.success(data: result[:data], pagination: result[:pagination])
         end

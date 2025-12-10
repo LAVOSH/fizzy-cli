@@ -16,5 +16,20 @@ module Fizzy
 
     desc "identity SUBCOMMAND", "Manage identity"
     subcommand "identity", Commands::Identity
+
+    desc "board SUBCOMMAND", "Manage boards"
+    subcommand "board", Commands::Board
+
+    desc "card SUBCOMMAND", "Manage cards"
+    subcommand "card", Commands::Card
+
+    desc "column SUBCOMMAND", "Manage columns"
+    subcommand "column", Commands::Column
+
+    desc "user SUBCOMMAND", "Manage users"
+    subcommand "user", Commands::User
+
+    desc "tag SUBCOMMAND", "Manage tags"
+    subcommand "tag", Commands::Tag
   end
 end
