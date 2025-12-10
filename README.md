@@ -2,6 +2,12 @@
 
 A command-line interface for the [Fizzy](https://fizzy.do) API.  Read API [docs](https://github.com/basecamp/fizzy/blob/main/docs/API.md).
 
+
+
+https://github.com/user-attachments/assets/86b91eae-7e8a-418c-a99e-3493ed7290cc
+
+
+
 ## Installation
 
 Download the latest release from [GitHub Releases](https://github.com/fizzy/fizzy-cli/releases) and add it to your PATH.
