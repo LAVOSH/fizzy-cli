@@ -36,9 +36,10 @@ bundle install
 fizzy identity show
 ```
 
-4. Set your default account:
+4. Set your default account (use the numeric slug without the leading slash):
 
 ```bash
+# From identity show: "slug": "/897362094" → use 897362094
 export FIZZY_ACCOUNT=897362094
 ```
 
