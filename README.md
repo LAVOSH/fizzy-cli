@@ -86,6 +86,7 @@ fizzy board delete BOARD_ID
 # List cards (with optional filters)
 fizzy card list
 fizzy card list --board BOARD_ID
+fizzy card list --tag TAG_ID
 fizzy card list --status published
 fizzy card list --assignee USER_ID
 
@@ -95,9 +96,15 @@ fizzy card show 42
 # Create a card
 fizzy card create --board BOARD_ID --title "Fix login bug"
 fizzy card create --board BOARD_ID --title "New feature" --description "Details here"
+fizzy card create --board BOARD_ID --title "Card" --tag-ids "TAG_ID1,TAG_ID2"
+fizzy card create --board BOARD_ID --title "Card" --image /path/to/header.png
+
+# Create with custom timestamp (for data imports)
+fizzy card create --board BOARD_ID --title "Old card" --created-at "2020-01-15T10:30:00Z"
 
 # Update a card
 fizzy card update 42 --title "Updated title"
+fizzy card update 42 --created-at "2019-01-01T00:00:00Z"
 
 # Delete a card
 fizzy card delete 42
@@ -146,8 +153,45 @@ fizzy column delete COLUMN_ID --board BOARD_ID
 fizzy comment list --card 42
 fizzy comment show COMMENT_ID --card 42
 fizzy comment create --card 42 --body "Looks good!"
+fizzy comment create --card 42 --body-file /path/to/comment.html
+
+# Create with custom timestamp (for data imports)
+fizzy comment create --card 42 --body "Old comment" --created-at "2020-01-15T10:30:00Z"
+
 fizzy comment update COMMENT_ID --card 42 --body "Updated comment"
 fizzy comment delete COMMENT_ID --card 42
+```
+
+### Steps (To-Do Items)
+
+```bash
+# Show a step
+fizzy step show STEP_ID --card 42
+
+# Create a step
+fizzy step create --card 42 --content "Review PR"
+fizzy step create --card 42 --content "Already done" --completed
+
+# Update a step
+fizzy step update STEP_ID --card 42 --completed
+fizzy step update STEP_ID --card 42 --not-completed
+fizzy step update STEP_ID --card 42 --content "New content"
+
+# Delete a step
+fizzy step delete STEP_ID --card 42
+```
+
+### Reactions
+
+```bash
+# List reactions on a comment
+fizzy reaction list --card 42 --comment COMMENT_ID
+
+# Add a reaction (emoji, max 16 chars)
+fizzy reaction create --card 42 --comment COMMENT_ID --content "👍"
+
+# Remove a reaction
+fizzy reaction delete REACTION_ID --card 42 --comment COMMENT_ID
 ```
 
 ### Users
@@ -170,6 +214,26 @@ fizzy notification list
 fizzy notification read NOTIFICATION_ID
 fizzy notification unread NOTIFICATION_ID
 fizzy notification read-all
+```
+
+### File Uploads
+
+Upload files for use in rich text fields (card descriptions, comment bodies).
+
+```bash
+# Upload a file and get a signed_id
+fizzy upload file /path/to/image.png
+
+# Use the signed_id in a card description
+fizzy card create --board BOARD_ID --title "Card" \
+  --description '<p>See image:</p><action-text-attachment sgid="SIGNED_ID"></action-text-attachment>'
+```
+
+### Identity
+
+```bash
+# Show your identity and all accessible accounts
+fizzy identity show
 ```
 
 ## Output Format
