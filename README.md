@@ -53,7 +53,7 @@ fizzy <resource> <action> [options]
 | Option | Environment Variable | Description |
 |--------|---------------------|-------------|
 | `--token` | `FIZZY_TOKEN` | API access token |
-| `--account` | `FIZZY_ACCOUNT` | Account ID |
+| `--account` | `FIZZY_ACCOUNT` | Account slug (from `fizzy identity show`) |
 | `--format` | | Output format: `json` (default), `text` |
 | `--quiet` | | Suppress non-essential output |
 | `--verbose` | | Show request/response details |
