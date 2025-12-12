@@ -250,6 +250,24 @@ All commands output JSON by default:
 }
 ```
 
+When creating resources (e.g., cards, comments), the CLI automatically follows the `Location` header returned by the API to fetch the complete resource data, including server-generated fields like `id` and `number`:
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "abc123",
+    "number": 42,
+    "title": "New Card",
+    "status": "published"
+  },
+  "location": "https://app.fizzy.do/account/cards/42",
+  "meta": {
+    "timestamp": "2025-12-10T10:00:00Z"
+  }
+}
+```
+
 Errors return a non-zero exit code and structured error info:
 
 ```json

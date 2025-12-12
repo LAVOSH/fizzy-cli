@@ -174,14 +174,48 @@ module Fizzy
     end
 
     def parse_success_response(response)
+      location = response["Location"]
+
+      # If body is empty but Location header exists, follow it to get the resource
+      if (response.body.nil? || response.body.empty?) && location
+        return follow_location(location)
+      end
+
+      # Preserve backward compatibility: return nil for empty responses without Location
       return nil if response.body.nil? || response.body.empty?
 
       data = JSON.parse(response.body)
       pagination = parse_link_header(response["Link"])
 
-      { data: data, pagination: pagination }
+      result = { data: data, pagination: pagination }
+      result[:location] = location if location
+      result
     rescue JSON::ParserError
-      { data: response.body, pagination: nil }
+      result = { data: response.body, pagination: nil }
+      result[:location] = location if location
+      result
+    end
+
+    def follow_location(location_url)
+      uri = URI.parse(location_url)
+      request = Net::HTTP::Get.new(uri)
+      request["Authorization"] = "Bearer #{@token}"
+      request["Accept"] = "application/json"
+
+      response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https") do |http|
+        http.open_timeout = 10
+        http.read_timeout = 30
+        http.request(request)
+      end
+
+      if response.is_a?(Net::HTTPSuccess)
+        data = JSON.parse(response.body)
+        { data: data, pagination: nil, location: location_url }
+      else
+        { data: nil, location: location_url }
+      end
+    rescue StandardError
+      { data: nil, location: location_url }
     end
 
     def parse_error_message(response)
