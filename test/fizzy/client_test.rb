@@ -126,4 +126,61 @@ class Fizzy::ClientTest < Fizzy::TestCase
     result = @client.get("/123456/cards")
     assert_nil result[:pagination]
   end
+
+  def test_follows_location_header_on_201_with_empty_body
+    stub_request(:post, "https://app.fizzy.do/123456/boards/5/cards")
+      .to_return(
+        status: 201,
+        body: "",
+        headers: {
+          "Location" => "https://app.fizzy.do/123456/cards/42"
+        }
+      )
+
+    stub_request(:get, "https://app.fizzy.do/123456/cards/42")
+      .with(headers: { "Authorization" => "Bearer test_token", "Accept" => "application/json" })
+      .to_return(
+        status: 200,
+        body: '{"id": "abc123", "number": 42, "title": "New Card"}',
+        headers: { "Content-Type" => "application/json" }
+      )
+
+    result = @client.post("/123456/boards/5/cards", { card: { title: "New Card" } })
+    assert_equal({ "id" => "abc123", "number" => 42, "title" => "New Card" }, result[:data])
+    assert_equal "https://app.fizzy.do/123456/cards/42", result[:location]
+  end
+
+  def test_returns_location_when_body_present
+    stub_request(:post, "https://app.fizzy.do/123456/boards/5/cards")
+      .to_return(
+        status: 201,
+        body: '{"id": "abc123", "number": 42}',
+        headers: {
+          "Content-Type" => "application/json",
+          "Location" => "https://app.fizzy.do/123456/cards/42"
+        }
+      )
+
+    result = @client.post("/123456/boards/5/cards", { card: { title: "New Card" } })
+    assert_equal({ "id" => "abc123", "number" => 42 }, result[:data])
+    assert_equal "https://app.fizzy.do/123456/cards/42", result[:location]
+  end
+
+  def test_returns_location_only_when_follow_fails
+    stub_request(:post, "https://app.fizzy.do/123456/boards/5/cards")
+      .to_return(
+        status: 201,
+        body: "",
+        headers: {
+          "Location" => "https://app.fizzy.do/123456/cards/42"
+        }
+      )
+
+    stub_request(:get, "https://app.fizzy.do/123456/cards/42")
+      .to_return(status: 404, body: '{"error": "Not found"}')
+
+    result = @client.post("/123456/boards/5/cards", { card: { title: "New Card" } })
+    assert_nil result[:data]
+    assert_equal "https://app.fizzy.do/123456/cards/42", result[:location]
+  end
 end

@@ -47,7 +47,7 @@ module Fizzy
         elsif result.nil?
           Response.success(data: nil)
         else
-          Response.success(data: result[:data], pagination: result[:pagination])
+          Response.success(data: result[:data], pagination: result[:pagination], location: result[:location])
         end
 
         puts response.to_json

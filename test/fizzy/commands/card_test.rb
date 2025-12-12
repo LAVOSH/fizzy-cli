@@ -151,6 +151,36 @@ class Fizzy::Commands::CardTest < Fizzy::TestCase
     assert_equal "2024-01-15T10:30:00Z", result["data"]["created_at"]
   end
 
+  def test_create_follows_location_header_for_card_data
+    stub_request(:post, "https://app.fizzy.do/test_account/boards/5/cards")
+      .with(
+        body: { card: { title: "New Card" } }.to_json,
+        headers: { "Content-Type" => "application/json" }
+      )
+      .to_return(
+        status: 201,
+        body: "",
+        headers: { "Location" => "https://app.fizzy.do/test_account/cards/99" }
+      )
+
+    stub_request(:get, "https://app.fizzy.do/test_account/cards/99")
+      .to_return(
+        status: 200,
+        body: '{"id": "xyz789", "number": 99, "title": "New Card", "status": "published"}',
+        headers: { "Content-Type" => "application/json" }
+      )
+
+    output = capture_output do
+      Fizzy::Commands::Card.new([], { board: "5", title: "New Card" }).invoke(:create, [])
+    end
+
+    result = JSON.parse(output)
+    assert result["success"]
+    assert_equal 99, result["data"]["number"]
+    assert_equal "New Card", result["data"]["title"]
+    assert_equal "https://app.fizzy.do/test_account/cards/99", result["location"]
+  end
+
   def test_update_card
     stub_request(:put, "https://app.fizzy.do/test_account/cards/42")
       .with(
