@@ -118,7 +118,7 @@ fizzy card list --column COLUMN_ID
 fizzy card list --column maybe
 fizzy card list --column done
 fizzy card list --tag TAG_ID
-fizzy card list --status published
+fizzy card list --indexed-by not_now
 fizzy card list --assignee USER_ID
 
 # Tip: if you set a default `board` in config (or `FIZZY_BOARD`), `fizzy card list` automatically filters to that board unless you pass `--board`.

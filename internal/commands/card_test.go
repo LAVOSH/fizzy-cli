@@ -52,19 +52,19 @@ func TestCardList(t *testing.T) {
 		defer ResetTestMode()
 
 		cardListBoard = "123"
-		cardListStatus = "published"
+		cardListIndexedBy = "closed"
 		RunTestCommand(func() {
 			cardListCmd.Run(cardListCmd, []string{})
 		})
 		cardListBoard = ""
-		cardListStatus = ""
+		cardListIndexedBy = ""
 
 		if result.ExitCode != 0 {
 			t.Errorf("expected exit code 0, got %d", result.ExitCode)
 		}
 		// Check that path contains filters
 		path := mock.GetWithPaginationCalls[0].Path
-		if path != "/cards.json?board_ids[]=123&status=published" {
+		if path != "/cards.json?board_ids[]=123&indexed_by=closed" {
 			t.Errorf("expected path with filters, got '%s'", path)
 		}
 	})

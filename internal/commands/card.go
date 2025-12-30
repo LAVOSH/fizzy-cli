@@ -19,7 +19,7 @@ var cardCmd = &cobra.Command{
 var cardListBoard string
 var cardListColumn string
 var cardListTag string
-var cardListStatus string
+var cardListIndexedBy string
 var cardListAssignee string
 var cardListPage int
 var cardListAll bool
@@ -35,6 +35,8 @@ var cardListCmd = &cobra.Command{
 
 		boardID := defaultBoard(cardListBoard)
 		columnFilter := strings.TrimSpace(cardListColumn)
+		indexedByFilter := strings.TrimSpace(cardListIndexedBy)
+		effectiveIndexedBy := indexedByFilter
 
 		client := getClient()
 		path := "/cards.json"
@@ -50,24 +52,37 @@ var cardListCmd = &cobra.Command{
 			if pseudo, ok := parsePseudoColumnID(columnFilter); ok {
 				switch pseudo.Kind {
 				case "not_now":
-					params = append(params, "indexed_by=not_now")
+					if effectiveIndexedBy != "" && effectiveIndexedBy != "not_now" {
+						exitWithError(errors.NewInvalidArgsError("cannot combine --indexed-by with --column maybe"))
+					}
+					effectiveIndexedBy = "not_now"
 				case "closed":
-					params = append(params, "indexed_by=closed")
+					if effectiveIndexedBy != "" && effectiveIndexedBy != "closed" {
+						exitWithError(errors.NewInvalidArgsError("cannot combine --indexed-by with --column done"))
+					}
+					effectiveIndexedBy = "closed"
 				case "triage":
+					if effectiveIndexedBy != "" {
+						exitWithError(errors.NewInvalidArgsError("cannot combine --indexed-by with --column not-yet"))
+					}
 					clientSideTriage = true
 				default:
 					clientSideColumnFilter = columnFilter
 				}
 			} else {
+				if effectiveIndexedBy != "" {
+					exitWithError(errors.NewInvalidArgsError("cannot combine --indexed-by with --column"))
+				}
 				clientSideColumnFilter = columnFilter
 			}
 		}
 
+		if effectiveIndexedBy != "" {
+			params = append(params, "indexed_by="+effectiveIndexedBy)
+		}
+
 		if cardListTag != "" {
 			params = append(params, "tag_ids[]="+cardListTag)
-		}
-		if cardListStatus != "" {
-			params = append(params, "status="+cardListStatus)
 		}
 		if cardListAssignee != "" {
 			params = append(params, "assignee_ids[]="+cardListAssignee)
@@ -588,7 +603,9 @@ func init() {
 	cardListCmd.Flags().StringVar(&cardListBoard, "board", "", "Filter by board ID")
 	cardListCmd.Flags().StringVar(&cardListColumn, "column", "", "Filter by column ID or pseudo column (not-yet, maybe, done)")
 	cardListCmd.Flags().StringVar(&cardListTag, "tag", "", "Filter by tag ID")
-	cardListCmd.Flags().StringVar(&cardListStatus, "status", "", "Filter by status")
+	cardListCmd.Flags().StringVar(&cardListIndexedBy, "indexed-by", "", "Filter by lane/index (all, closed, not_now, stalled, postponing_soon, golden)")
+	cardListCmd.Flags().StringVar(&cardListIndexedBy, "status", "", "Alias for --indexed-by")
+	_ = cardListCmd.Flags().MarkDeprecated("status", "use --indexed-by")
 	cardListCmd.Flags().StringVar(&cardListAssignee, "assignee", "", "Filter by assignee ID")
 	cardListCmd.Flags().IntVar(&cardListPage, "page", 0, "Page number")
 	cardListCmd.Flags().BoolVar(&cardListAll, "all", false, "Fetch all pages")
