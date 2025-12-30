@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -304,6 +305,8 @@ func TestCardCreateWithDescription(t *testing.T) {
 	t.Run("create card with description", func(t *testing.T) {
 		title := fmt.Sprintf("Card with Description %d", time.Now().UnixNano())
 		description := "<p>This is a <strong>test</strong> description.</p>"
+		// API returns plain text version of description (HTML tags stripped)
+		expectedDescPlainText := "This is a test description."
 
 		result := h.Run("card", "create", "--board", boardID, "--title", title, "--description", description)
 
@@ -322,6 +325,32 @@ func TestCardCreateWithDescription(t *testing.T) {
 
 		if !result.Response.Success {
 			t.Error("expected success=true")
+		}
+
+		// Verify the description was actually saved by fetching the card
+		if cardNumber != 0 {
+			showResult := h.Run("card", "show", strconv.Itoa(cardNumber))
+			if showResult.ExitCode != harness.ExitSuccess {
+				t.Fatalf("failed to show card: %s", showResult.Stderr)
+			}
+			savedTitle := showResult.GetDataString("title")
+			if savedTitle != title {
+				t.Errorf("expected title %q, got %q", title, savedTitle)
+			}
+			// API returns plain text version
+			savedDesc := showResult.GetDataString("description")
+			if savedDesc != expectedDescPlainText {
+				t.Errorf("expected description %q, got %q", expectedDescPlainText, savedDesc)
+			}
+			// Verify HTML version is also returned and contains our markup
+			savedDescHtml := showResult.GetDataString("description_html")
+			if savedDescHtml == "" {
+				t.Error("expected description_html to be present")
+			}
+			// The HTML should contain our strong tag (Rails preserves it through Action Text)
+			if !strings.Contains(savedDescHtml, "<strong>") && !strings.Contains(savedDescHtml, "test") {
+				t.Errorf("expected description_html to contain markup, got %q", savedDescHtml)
+			}
 		}
 	})
 

@@ -194,9 +194,8 @@ var cardCreateCmd = &cobra.Command{
 			exitWithError(newRequiredFlagError("title"))
 		}
 
-		body := map[string]interface{}{
-			"board_id": boardID,
-			"title":    cardCreateTitle,
+		cardParams := map[string]interface{}{
+			"title": cardCreateTitle,
 		}
 
 		// Handle description
@@ -205,19 +204,24 @@ var cardCreateCmd = &cobra.Command{
 			if err != nil {
 				exitWithError(err)
 			}
-			body["description"] = string(content)
+			cardParams["description"] = string(content)
 		} else if cardCreateDescription != "" {
-			body["description"] = cardCreateDescription
+			cardParams["description"] = cardCreateDescription
 		}
 
 		if cardCreateTagIDs != "" {
-			body["tag_ids"] = cardCreateTagIDs
+			cardParams["tag_ids"] = cardCreateTagIDs
 		}
 		if cardCreateImage != "" {
-			body["image"] = cardCreateImage
+			cardParams["image"] = cardCreateImage
 		}
 		if cardCreateCreatedAt != "" {
-			body["created_at"] = cardCreateCreatedAt
+			cardParams["created_at"] = cardCreateCreatedAt
+		}
+
+		body := map[string]interface{}{
+			"board_id": boardID,
+			"card":     cardParams,
 		}
 
 		client := getClient()
@@ -257,22 +261,26 @@ var cardUpdateCmd = &cobra.Command{
 			exitWithError(err)
 		}
 
-		body := make(map[string]interface{})
+		cardParams := make(map[string]interface{})
 
 		if cardUpdateTitle != "" {
-			body["title"] = cardUpdateTitle
+			cardParams["title"] = cardUpdateTitle
 		}
 		if cardUpdateDescriptionFile != "" {
 			content, err := os.ReadFile(cardUpdateDescriptionFile)
 			if err != nil {
 				exitWithError(err)
 			}
-			body["description"] = string(content)
+			cardParams["description"] = string(content)
 		} else if cardUpdateDescription != "" {
-			body["description"] = cardUpdateDescription
+			cardParams["description"] = cardUpdateDescription
 		}
 		if cardUpdateCreatedAt != "" {
-			body["created_at"] = cardUpdateCreatedAt
+			cardParams["created_at"] = cardUpdateCreatedAt
+		}
+
+		body := map[string]interface{}{
+			"card": cardParams,
 		}
 
 		client := getClient()

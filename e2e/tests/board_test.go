@@ -103,6 +103,16 @@ func TestBoardCRUD(t *testing.T) {
 		}
 
 		h.Cleanup.AddBoard(boardID)
+
+		// Verify the name was actually saved by fetching the board
+		showResult := h.Run("board", "show", boardID)
+		if showResult.ExitCode != harness.ExitSuccess {
+			t.Fatalf("failed to show board: %s", showResult.Stderr)
+		}
+		savedName := showResult.GetDataString("name")
+		if savedName != boardName {
+			t.Errorf("expected name %q, got %q", boardName, savedName)
+		}
 	})
 
 	t.Run("show board by ID", func(t *testing.T) {

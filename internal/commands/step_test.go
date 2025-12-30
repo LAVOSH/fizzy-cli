@@ -88,8 +88,9 @@ func TestStepCreate(t *testing.T) {
 		}
 
 		body := mock.PostCalls[0].Body.(map[string]interface{})
-		if body["content"] != "New step" {
-			t.Errorf("expected content 'New step', got '%v'", body["content"])
+		stepParams := body["step"].(map[string]interface{})
+		if stepParams["content"] != "New step" {
+			t.Errorf("expected content 'New step', got '%v'", stepParams["content"])
 		}
 	})
 
@@ -123,8 +124,9 @@ func TestStepCreate(t *testing.T) {
 		}
 
 		body := mock.PostCalls[0].Body.(map[string]interface{})
-		if body["completed"] != true {
-			t.Errorf("expected completed true, got '%v'", body["completed"])
+		stepParams := body["step"].(map[string]interface{})
+		if stepParams["completed"] != true {
+			t.Errorf("expected completed true, got '%v'", stepParams["completed"])
 		}
 	})
 

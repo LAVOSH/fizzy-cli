@@ -185,13 +185,17 @@ func TestBoardCreate(t *testing.T) {
 			t.Errorf("expected path '/boards.json', got '%s'", mock.PostCalls[0].Path)
 		}
 
-		// Verify body contains name
+		// Verify body contains board wrapper with name
 		body, ok := mock.PostCalls[0].Body.(map[string]interface{})
 		if !ok {
 			t.Fatal("expected map body")
 		}
-		if body["name"] != "New Board" {
-			t.Errorf("expected name 'New Board', got '%v'", body["name"])
+		boardParams, ok := body["board"].(map[string]interface{})
+		if !ok {
+			t.Fatal("expected board wrapper in body")
+		}
+		if boardParams["name"] != "New Board" {
+			t.Errorf("expected name 'New Board', got '%v'", boardParams["name"])
 		}
 	})
 
@@ -241,11 +245,12 @@ func TestBoardCreate(t *testing.T) {
 		}
 
 		body := mock.PostCalls[0].Body.(map[string]interface{})
-		if body["all_access"] != false {
-			t.Errorf("expected all_access false, got %v", body["all_access"])
+		boardParams := body["board"].(map[string]interface{})
+		if boardParams["all_access"] != false {
+			t.Errorf("expected all_access false, got %v", boardParams["all_access"])
 		}
-		if body["auto_postpone_period"] != 7 {
-			t.Errorf("expected auto_postpone_period 7, got %v", body["auto_postpone_period"])
+		if boardParams["auto_postpone_period"] != 7 {
+			t.Errorf("expected auto_postpone_period 7, got %v", boardParams["auto_postpone_period"])
 		}
 	})
 }

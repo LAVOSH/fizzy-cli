@@ -283,8 +283,9 @@ func TestCardCreate(t *testing.T) {
 		if body["board_id"] != "123" {
 			t.Errorf("expected board_id '123', got '%v'", body["board_id"])
 		}
-		if body["title"] != "New Card" {
-			t.Errorf("expected title 'New Card', got '%v'", body["title"])
+		cardParams := body["card"].(map[string]interface{})
+		if cardParams["title"] != "New Card" {
+			t.Errorf("expected title 'New Card', got '%v'", cardParams["title"])
 		}
 	})
 
@@ -388,11 +389,12 @@ func TestCardCreate(t *testing.T) {
 		}
 
 		body := mock.PostCalls[0].Body.(map[string]interface{})
-		if body["description"] != "<p>Description</p>" {
-			t.Errorf("expected description '<p>Description</p>', got '%v'", body["description"])
+		cardParams := body["card"].(map[string]interface{})
+		if cardParams["description"] != "<p>Description</p>" {
+			t.Errorf("expected description '<p>Description</p>', got '%v'", cardParams["description"])
 		}
-		if body["tag_ids"] != "tag1,tag2" {
-			t.Errorf("expected tag_ids 'tag1,tag2', got '%v'", body["tag_ids"])
+		if cardParams["tag_ids"] != "tag1,tag2" {
+			t.Errorf("expected tag_ids 'tag1,tag2', got '%v'", cardParams["tag_ids"])
 		}
 	})
 }

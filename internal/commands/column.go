@@ -104,11 +104,15 @@ var columnCreateCmd = &cobra.Command{
 			exitWithError(newRequiredFlagError("name"))
 		}
 
-		body := map[string]interface{}{
+		columnParams := map[string]interface{}{
 			"name": columnCreateName,
 		}
 		if columnCreateColor != "" {
-			body["color"] = columnCreateColor
+			columnParams["color"] = columnCreateColor
+		}
+
+		body := map[string]interface{}{
+			"column": columnParams,
 		}
 
 		client := getClient()
@@ -156,12 +160,16 @@ var columnUpdateCmd = &cobra.Command{
 			exitWithError(err)
 		}
 
-		body := make(map[string]interface{})
+		columnParams := make(map[string]interface{})
 		if columnUpdateName != "" {
-			body["name"] = columnUpdateName
+			columnParams["name"] = columnUpdateName
 		}
 		if columnUpdateColor != "" {
-			body["color"] = columnUpdateColor
+			columnParams["color"] = columnUpdateColor
+		}
+
+		body := map[string]interface{}{
+			"column": columnParams,
 		}
 
 		client := getClient()

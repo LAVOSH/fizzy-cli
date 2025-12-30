@@ -204,8 +204,9 @@ func TestColumnCreate(t *testing.T) {
 		}
 
 		body := mock.PostCalls[0].Body.(map[string]interface{})
-		if body["name"] != "New Column" {
-			t.Errorf("expected name 'New Column', got '%v'", body["name"])
+		columnParams := body["column"].(map[string]interface{})
+		if columnParams["name"] != "New Column" {
+			t.Errorf("expected name 'New Column', got '%v'", columnParams["name"])
 		}
 	})
 
@@ -275,8 +276,9 @@ func TestColumnCreate(t *testing.T) {
 		}
 
 		body := mock.PostCalls[0].Body.(map[string]interface{})
-		if body["color"] != "blue" {
-			t.Errorf("expected color 'blue', got '%v'", body["color"])
+		columnParams := body["column"].(map[string]interface{})
+		if columnParams["color"] != "blue" {
+			t.Errorf("expected color 'blue', got '%v'", columnParams["color"])
 		}
 	})
 }

@@ -93,7 +93,8 @@ func TestColumnCRUD(t *testing.T) {
 
 	t.Run("create column with color", func(t *testing.T) {
 		name := fmt.Sprintf("Colored Column %d", time.Now().UnixNano())
-		result := h.Run("column", "create", "--board", boardID, "--name", name, "--color", "var(--color-card-4)")
+		color := "var(--color-card-4)"
+		result := h.Run("column", "create", "--board", boardID, "--name", name, "--color", color)
 
 		if result.ExitCode != harness.ExitSuccess {
 			t.Fatalf("expected exit code %d, got %d\nstderr: %s", harness.ExitSuccess, result.ExitCode, result.Stderr)
@@ -110,6 +111,28 @@ func TestColumnCRUD(t *testing.T) {
 
 		if !result.Response.Success {
 			t.Error("expected success=true")
+		}
+
+		// Verify the name and color were actually saved
+		if id != "" {
+			showResult := h.Run("column", "show", id, "--board", boardID)
+			if showResult.ExitCode != harness.ExitSuccess {
+				t.Fatalf("failed to show column: %s", showResult.Stderr)
+			}
+			savedName := showResult.GetDataString("name")
+			if savedName != name {
+				t.Errorf("expected name %q, got %q", name, savedName)
+			}
+			// Color is returned as an object with "value" field
+			data := showResult.GetDataMap()
+			if colorObj, ok := data["color"].(map[string]interface{}); ok {
+				savedColorValue := colorObj["value"].(string)
+				if savedColorValue != color {
+					t.Errorf("expected color value %q, got %q", color, savedColorValue)
+				}
+			} else {
+				t.Errorf("expected color object, got %T", data["color"])
+			}
 		}
 	})
 

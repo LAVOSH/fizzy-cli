@@ -78,15 +78,19 @@ var boardCreateCmd = &cobra.Command{
 			exitWithError(newRequiredFlagError("name"))
 		}
 
-		body := map[string]interface{}{
+		boardParams := map[string]interface{}{
 			"name": boardCreateName,
 		}
 
 		if boardCreateAllAccess != "" {
-			body["all_access"] = boardCreateAllAccess == "true"
+			boardParams["all_access"] = boardCreateAllAccess == "true"
 		}
 		if boardCreateAutoPostponePeriod > 0 {
-			body["auto_postpone_period"] = boardCreateAutoPostponePeriod
+			boardParams["auto_postpone_period"] = boardCreateAutoPostponePeriod
+		}
+
+		body := map[string]interface{}{
+			"board": boardParams,
 		}
 
 		client := getClient()
@@ -126,16 +130,20 @@ var boardUpdateCmd = &cobra.Command{
 			exitWithError(err)
 		}
 
-		body := make(map[string]interface{})
+		boardParams := make(map[string]interface{})
 
 		if boardUpdateName != "" {
-			body["name"] = boardUpdateName
+			boardParams["name"] = boardUpdateName
 		}
 		if boardUpdateAllAccess != "" {
-			body["all_access"] = boardUpdateAllAccess == "true"
+			boardParams["all_access"] = boardUpdateAllAccess == "true"
 		}
 		if boardUpdateAutoPostponePeriod > 0 {
-			body["auto_postpone_period"] = boardUpdateAutoPostponePeriod
+			boardParams["auto_postpone_period"] = boardUpdateAutoPostponePeriod
+		}
+
+		body := map[string]interface{}{
+			"board": boardParams,
 		}
 
 		client := getClient()

@@ -58,11 +58,15 @@ var stepCreateCmd = &cobra.Command{
 			exitWithError(newRequiredFlagError("content"))
 		}
 
-		body := map[string]interface{}{
+		stepParams := map[string]interface{}{
 			"content": stepCreateContent,
 		}
 		if stepCreateCompleted {
-			body["completed"] = true
+			stepParams["completed"] = true
+		}
+
+		body := map[string]interface{}{
+			"step": stepParams,
 		}
 
 		client := getClient()
@@ -106,16 +110,20 @@ var stepUpdateCmd = &cobra.Command{
 			exitWithError(newRequiredFlagError("card"))
 		}
 
-		body := make(map[string]interface{})
+		stepParams := make(map[string]interface{})
 
 		if stepUpdateContent != "" {
-			body["content"] = stepUpdateContent
+			stepParams["content"] = stepUpdateContent
 		}
 		if stepUpdateCompleted {
-			body["completed"] = true
+			stepParams["completed"] = true
 		}
 		if stepUpdateNotCompleted {
-			body["completed"] = false
+			stepParams["completed"] = false
+		}
+
+		body := map[string]interface{}{
+			"step": stepParams,
 		}
 
 		client := getClient()

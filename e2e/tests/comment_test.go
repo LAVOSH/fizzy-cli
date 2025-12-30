@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -116,6 +117,31 @@ func TestCommentCRUD(t *testing.T) {
 		}
 
 		h.Cleanup.AddComment(commentID, cardNumber)
+
+		// Verify the body was actually saved by fetching the comment
+		showResult := h.Run("comment", "show", commentID, "--card", cardStr)
+		if showResult.ExitCode != harness.ExitSuccess {
+			t.Fatalf("failed to show comment: %s", showResult.Stderr)
+		}
+		// Body is returned as an object with "plain_text" and "html" fields
+		data := showResult.GetDataMap()
+		if bodyObj, ok := data["body"].(map[string]interface{}); ok {
+			savedBody := bodyObj["plain_text"].(string)
+			if savedBody != commentBody {
+				t.Errorf("expected body %q, got %q", commentBody, savedBody)
+			}
+			// Verify HTML version is also returned
+			savedHtml, ok := bodyObj["html"].(string)
+			if !ok || savedHtml == "" {
+				t.Error("expected body.html to be present")
+			}
+			// The HTML should contain our text
+			if !strings.Contains(savedHtml, commentBody) {
+				t.Errorf("expected body.html to contain %q, got %q", commentBody, savedHtml)
+			}
+		} else {
+			t.Errorf("expected body object, got %T", data["body"])
+		}
 	})
 
 	t.Run("create comment with body_file", func(t *testing.T) {
@@ -189,6 +215,31 @@ func TestCommentCRUD(t *testing.T) {
 
 		if !result.Response.Success {
 			t.Error("expected success=true")
+		}
+
+		// Verify the body was actually updated by fetching the comment
+		showResult := h.Run("comment", "show", commentID, "--card", cardStr)
+		if showResult.ExitCode != harness.ExitSuccess {
+			t.Fatalf("failed to show comment: %s", showResult.Stderr)
+		}
+		// Body is returned as an object with "plain_text" and "html" fields
+		data := showResult.GetDataMap()
+		if bodyObj, ok := data["body"].(map[string]interface{}); ok {
+			savedBody := bodyObj["plain_text"].(string)
+			if savedBody != newBody {
+				t.Errorf("expected body %q after update, got %q", newBody, savedBody)
+			}
+			// Verify HTML version is also returned and updated
+			savedHtml, ok := bodyObj["html"].(string)
+			if !ok || savedHtml == "" {
+				t.Error("expected body.html to be present")
+			}
+			// The HTML should contain our updated text
+			if !strings.Contains(savedHtml, newBody) {
+				t.Errorf("expected body.html to contain %q, got %q", newBody, savedHtml)
+			}
+		} else {
+			t.Errorf("expected body object, got %T", data["body"])
 		}
 	})
 
