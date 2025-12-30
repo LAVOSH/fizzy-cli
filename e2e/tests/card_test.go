@@ -160,7 +160,7 @@ func TestCardListWithFilters(t *testing.T) {
 	})
 
 	t.Run("filters by status", func(t *testing.T) {
-		result := h.Run("card", "list", "--status", "published")
+		result := h.Run("card", "list", "--indexed-by", "not_now")
 
 		if result.ExitCode != harness.ExitSuccess {
 			t.Errorf("expected exit code %d, got %d", harness.ExitSuccess, result.ExitCode)
