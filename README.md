@@ -114,6 +114,9 @@ fizzy board delete BOARD_ID
 # List cards (with optional filters)
 fizzy card list
 fizzy card list --board BOARD_ID
+fizzy card list --column COLUMN_ID
+fizzy card list --column maybe
+fizzy card list --column done
 fizzy card list --tag TAG_ID
 fizzy card list --status published
 fizzy card list --assignee USER_ID
@@ -187,6 +190,8 @@ fizzy column delete COLUMN_ID --board BOARD_ID
 - `maybe` (Maybe?)
 - your real columns…
 - `done` (Done)
+
+When filtering cards by `--column not-yet` (triage) or a real column ID, the CLI filters client-side; use `--all` to fetch all pages before filtering.
 
 ### Comments
 
