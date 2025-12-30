@@ -472,6 +472,74 @@ func TestCardColumn(t *testing.T) {
 		}
 	})
 
+	t.Run("moves card to pseudo columns", func(t *testing.T) {
+		t.Run("not-yet", func(t *testing.T) {
+			mock := NewMockClient()
+			mock.DeleteResponse = &client.APIResponse{StatusCode: 200, Data: map[string]interface{}{}}
+
+			result := SetTestMode(mock)
+			SetTestConfig("token", "account", "https://api.example.com")
+			defer ResetTestMode()
+
+			cardColumnColumn = "not-yet"
+			RunTestCommand(func() {
+				cardColumnCmd.Run(cardColumnCmd, []string{"42"})
+			})
+			cardColumnColumn = ""
+
+			if result.ExitCode != 0 {
+				t.Errorf("expected exit code 0, got %d", result.ExitCode)
+			}
+			if len(mock.DeleteCalls) != 1 || mock.DeleteCalls[0].Path != "/cards/42/triage.json" {
+				t.Errorf("expected delete '/cards/42/triage.json', got %+v", mock.DeleteCalls)
+			}
+		})
+
+		t.Run("maybe", func(t *testing.T) {
+			mock := NewMockClient()
+			mock.PostResponse = &client.APIResponse{StatusCode: 200, Data: map[string]interface{}{}}
+
+			result := SetTestMode(mock)
+			SetTestConfig("token", "account", "https://api.example.com")
+			defer ResetTestMode()
+
+			cardColumnColumn = "maybe"
+			RunTestCommand(func() {
+				cardColumnCmd.Run(cardColumnCmd, []string{"42"})
+			})
+			cardColumnColumn = ""
+
+			if result.ExitCode != 0 {
+				t.Errorf("expected exit code 0, got %d", result.ExitCode)
+			}
+			if len(mock.PostCalls) != 1 || mock.PostCalls[0].Path != "/cards/42/not_now.json" {
+				t.Errorf("expected post '/cards/42/not_now.json', got %+v", mock.PostCalls)
+			}
+		})
+
+		t.Run("done", func(t *testing.T) {
+			mock := NewMockClient()
+			mock.PostResponse = &client.APIResponse{StatusCode: 200, Data: map[string]interface{}{}}
+
+			result := SetTestMode(mock)
+			SetTestConfig("token", "account", "https://api.example.com")
+			defer ResetTestMode()
+
+			cardColumnColumn = "done"
+			RunTestCommand(func() {
+				cardColumnCmd.Run(cardColumnCmd, []string{"42"})
+			})
+			cardColumnColumn = ""
+
+			if result.ExitCode != 0 {
+				t.Errorf("expected exit code 0, got %d", result.ExitCode)
+			}
+			if len(mock.PostCalls) != 1 || mock.PostCalls[0].Path != "/cards/42/closure.json" {
+				t.Errorf("expected post '/cards/42/closure.json', got %+v", mock.PostCalls)
+			}
+		})
+	})
+
 	t.Run("requires column flag", func(t *testing.T) {
 		mock := NewMockClient()
 		result := SetTestMode(mock)

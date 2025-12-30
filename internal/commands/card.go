@@ -314,11 +314,49 @@ var cardColumnCmd = &cobra.Command{
 			exitWithError(newRequiredFlagError("column"))
 		}
 
+		client := getClient()
+		if pseudo, ok := parsePseudoColumnID(cardColumnColumn); ok {
+			switch pseudo.Kind {
+			case "triage":
+				resp, err := client.Delete("/cards/" + args[0] + "/triage.json")
+				if err != nil {
+					exitWithError(err)
+				}
+				if resp != nil && resp.Data != nil {
+					printSuccess(resp.Data)
+				} else {
+					printSuccess(map[string]interface{}{})
+				}
+				return
+			case "not_now":
+				resp, err := client.Post("/cards/"+args[0]+"/not_now.json", nil)
+				if err != nil {
+					exitWithError(err)
+				}
+				if resp != nil && resp.Data != nil {
+					printSuccess(resp.Data)
+				} else {
+					printSuccess(map[string]interface{}{})
+				}
+				return
+			case "closed":
+				resp, err := client.Post("/cards/"+args[0]+"/closure.json", nil)
+				if err != nil {
+					exitWithError(err)
+				}
+				if resp != nil && resp.Data != nil {
+					printSuccess(resp.Data)
+				} else {
+					printSuccess(map[string]interface{}{})
+				}
+				return
+			}
+		}
+
 		body := map[string]interface{}{
 			"column_id": cardColumnColumn,
 		}
 
-		client := getClient()
 		resp, err := client.Post("/cards/"+args[0]+"/triage.json", body)
 		if err != nil {
 			exitWithError(err)
