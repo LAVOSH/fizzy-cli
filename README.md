@@ -118,6 +118,8 @@ fizzy card list --tag TAG_ID
 fizzy card list --status published
 fizzy card list --assignee USER_ID
 
+# Tip: if you set a default `board` in config (or `FIZZY_BOARD`), `fizzy card list` automatically filters to that board unless you pass `--board`.
+
 # Show a card
 fizzy card show 42
 

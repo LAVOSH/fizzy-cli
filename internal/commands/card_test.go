@@ -64,7 +64,7 @@ func TestCardList(t *testing.T) {
 		}
 		// Check that path contains filters
 		path := mock.GetWithPaginationCalls[0].Path
-		if path != "/cards.json?board_id=123&status=published" {
+		if path != "/cards.json?board_ids[]=123&status=published" {
 			t.Errorf("expected path with filters, got '%s'", path)
 		}
 	})
@@ -88,8 +88,8 @@ func TestCardList(t *testing.T) {
 		if result.ExitCode != 0 {
 			t.Errorf("expected exit code 0, got %d", result.ExitCode)
 		}
-		if mock.GetWithPaginationCalls[0].Path != "/cards.json?board_id=999" {
-			t.Errorf("expected path '/cards.json?board_id=999', got '%s'", mock.GetWithPaginationCalls[0].Path)
+		if mock.GetWithPaginationCalls[0].Path != "/cards.json?board_ids[]=999" {
+			t.Errorf("expected path '/cards.json?board_ids[]=999', got '%s'", mock.GetWithPaginationCalls[0].Path)
 		}
 	})
 
