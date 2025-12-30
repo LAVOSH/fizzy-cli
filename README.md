@@ -14,6 +14,24 @@ yay -S fizzy-cli
 brew install robzolkos/fizzy-cli/fizzy-cli
 ```
 
+**Debian/Ubuntu**
+```bash
+# Download the .deb for your architecture (amd64 or arm64)
+curl -LO https://github.com/robzolkos/fizzy-cli/releases/latest/download/fizzy-cli_VERSION_amd64.deb
+sudo dpkg -i fizzy-cli_VERSION_amd64.deb
+```
+
+**Fedora/RHEL**
+```bash
+# Download the .rpm for your architecture (x86_64 or aarch64)
+curl -LO https://github.com/robzolkos/fizzy-cli/releases/latest/download/fizzy-cli-VERSION-1.x86_64.rpm
+sudo rpm -i fizzy-cli-VERSION-1.x86_64.rpm
+```
+
+**Windows**
+
+Download `fizzy-windows-amd64.exe` from [GitHub Releases](https://github.com/robzolkos/fizzy-cli/releases), rename it to `fizzy.exe`, and add it to your PATH.
+
 **With Go**
 ```bash
 go install github.com/robzolkos/fizzy-cli/cmd/fizzy@latest
@@ -21,7 +39,7 @@ go install github.com/robzolkos/fizzy-cli/cmd/fizzy@latest
 
 **From binary**
 
-Download the latest release from [GitHub Releases](https://github.com/robzolkos/fizzy-cli/releases) and add it to your PATH.
+Download the latest release for your platform from [GitHub Releases](https://github.com/robzolkos/fizzy-cli/releases) and add it to your PATH.
 
 **From source**
 ```bash
