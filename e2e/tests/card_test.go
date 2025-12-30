@@ -89,6 +89,36 @@ func TestCardListWithFilters(t *testing.T) {
 	boardID := createTestBoard(t, h)
 
 	t.Run("filters by board", func(t *testing.T) {
+		// Create two cards on different boards to ensure the filter is effective.
+		otherBoardID := createTestBoard(t, h)
+
+		titleA := fmt.Sprintf("Board Filter A %d", time.Now().UnixNano())
+		titleB := fmt.Sprintf("Board Filter B %d", time.Now().UnixNano())
+
+		createdA := h.Run("card", "create", "--board", boardID, "--title", titleA)
+		if createdA.ExitCode != harness.ExitSuccess {
+			t.Fatalf("failed to create card on board A: %s\nstdout: %s", createdA.Stderr, createdA.Stdout)
+		}
+		cardA := createdA.GetNumberFromLocation()
+		if cardA == 0 {
+			cardA = createdA.GetDataInt("number")
+		}
+		if cardA != 0 {
+			h.Cleanup.AddCard(cardA)
+		}
+
+		createdB := h.Run("card", "create", "--board", otherBoardID, "--title", titleB)
+		if createdB.ExitCode != harness.ExitSuccess {
+			t.Fatalf("failed to create card on board B: %s\nstdout: %s", createdB.Stderr, createdB.Stdout)
+		}
+		cardB := createdB.GetNumberFromLocation()
+		if cardB == 0 {
+			cardB = createdB.GetDataInt("number")
+		}
+		if cardB != 0 {
+			h.Cleanup.AddCard(cardB)
+		}
+
 		result := h.Run("card", "list", "--board", boardID)
 
 		if result.ExitCode != harness.ExitSuccess {
@@ -97,6 +127,35 @@ func TestCardListWithFilters(t *testing.T) {
 
 		if !result.Response.Success {
 			t.Error("expected success=true")
+		}
+
+		arr := result.GetDataArray()
+		if arr == nil {
+			t.Fatalf("expected array response\nstdout: %s", result.Stdout)
+		}
+
+		foundA := false
+		foundB := false
+		for _, item := range arr {
+			card, ok := item.(map[string]interface{})
+			if !ok {
+				continue
+			}
+			if title, ok := card["title"].(string); ok {
+				if title == titleA {
+					foundA = true
+				}
+				if title == titleB {
+					foundB = true
+				}
+			}
+		}
+
+		if !foundA {
+			t.Errorf("expected board-filtered list to include card created on board %s (title %q)", boardID, titleA)
+		}
+		if foundB {
+			t.Errorf("expected board-filtered list to exclude card created on other board %s (title %q)", otherBoardID, titleB)
 		}
 	})
 

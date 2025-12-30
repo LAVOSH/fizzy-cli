@@ -3,6 +3,7 @@ package commands
 import (
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -34,32 +35,25 @@ var cardListCmd = &cobra.Command{
 
 		client := getClient()
 		path := "/cards.json"
-		params := []string{}
 
+		var params []string
 		if boardID != "" {
-			params = append(params, "board_id="+boardID)
+			params = append(params, "board_ids[]="+boardID)
 		}
 		if cardListTag != "" {
-			params = append(params, "tag_id="+cardListTag)
+			params = append(params, "tag_ids[]="+cardListTag)
 		}
 		if cardListStatus != "" {
 			params = append(params, "status="+cardListStatus)
 		}
 		if cardListAssignee != "" {
-			params = append(params, "assignee_id="+cardListAssignee)
+			params = append(params, "assignee_ids[]="+cardListAssignee)
 		}
 		if cardListPage > 0 {
 			params = append(params, "page="+strconv.Itoa(cardListPage))
 		}
-
 		if len(params) > 0 {
-			path += "?"
-			for i, p := range params {
-				if i > 0 {
-					path += "&"
-				}
-				path += p
-			}
+			path += "?" + strings.Join(params, "&")
 		}
 
 		resp, err := client.GetWithPagination(path, cardListAll)
